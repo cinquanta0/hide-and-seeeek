@@ -231,56 +231,6 @@
             50%       { transform: translateY(-14px); filter: drop-shadow(0 0 50px rgba(180,0,0,0.85)); }
         }
 
-        /* Titolo principale con effetto glitch */
-        .hero-title {
-            font-family: var(--font-horror);
-            font-size: clamp(3.2rem, 10vw, 8rem);
-            color: #fff;
-            letter-spacing: 0.06em;
-            line-height: 1;
-            margin-bottom: 0.9rem;
-            position: relative;
-            text-shadow: 0 0 40px rgba(180,0,0,0.75), 0 0 80px rgba(180,0,0,0.3);
-        }
-
-        /* Layer glitch */
-        .hero-title::before,
-        .hero-title::after {
-            content: attr(data-text);
-            position: absolute; top: 0; left: 0;
-            width: 100%; height: 100%;
-        }
-        .hero-title::before {
-            color: rgba(255,0,0,0.35);
-            animation: glitch-a 5s infinite;
-        }
-        .hero-title::after {
-            color: rgba(0,255,100,0.12);
-            animation: glitch-b 5s infinite;
-        }
-
-        @keyframes glitch-a {
-            0%,88%,100% { clip-path: inset(100% 0 0 0); transform: translate(0); }
-            89% { clip-path: inset(15% 0 60% 0); transform: translate(-4px, 1px); }
-            90% { clip-path: inset(55% 0 18% 0); transform: translate(4px,-1px); }
-            91% { clip-path: inset(80% 0 5%  0); transform: translate(-2px,2px); }
-            92% { clip-path: inset(30% 0 45% 0); transform: translate(2px,-2px); }
-            93% { clip-path: inset(62% 0 8%  0); transform: translate(-1px,1px); }
-        }
-
-        @keyframes glitch-b {
-            0%,86%,100% { clip-path: inset(100% 0 0 0); transform: translate(0); }
-            87% { clip-path: inset(40% 0 40% 0); transform: translate(5px,-2px); }
-            88% { clip-path: inset(10% 0 80% 0); transform: translate(-5px,2px); }
-            89% { clip-path: inset(72% 0 12% 0); transform: translate(3px,1px);  }
-        }
-
-        .hero-divider {
-            width: 80px; height: 1px;
-            background: linear-gradient(90deg, transparent, var(--red-bright), transparent);
-            margin: 0.6rem auto 1rem;
-        }
-
         /* Tagline con cursore lampeggiante */
         .hero-tagline {
             font-family: var(--font-gothic);
@@ -725,24 +675,49 @@
             .nav-links { display: none; }
             .hamburger { display: flex; }
 
-            .section-inner { padding: 3.5rem 1.2rem; }
+            .section-inner { padding: 3rem 1rem; }
 
-            .env-card { padding: 2rem 1.4rem; }
+            /* Hero */
+            .hero-logo { width: min(200px, 72vw); margin-bottom: 1.2rem; }
+            .hero-tagline { font-size: clamp(0.9rem, 4.5vw, 1.2rem); padding: 0 1rem; text-align: center; }
 
+            /* Ambienti */
+            .env-card { min-height: 300px !important; }
+            .env-card-content { min-height: 300px !important; padding: 1.5rem 1.4rem 1.8rem; }
+            .env-card-title { font-size: 1.5rem; }
+            .env-description { font-size: 0.92rem; }
+            .obj-list { gap: 0.5rem; }
+            .obj-list li { font-size: 0.78rem; }
+
+            /* Footer */
             .footer-grid { grid-template-columns: 1fr; gap: 2rem; }
             .footer-brand { grid-column: auto; }
             .footer-bar { flex-direction: column; text-align: center; }
 
+            /* Diario */
+            .diary-wrapper { transform: none !important; filter: drop-shadow(0 8px 24px rgba(0,0,0,0.8)) !important; }
             .diary-inner   { grid-template-columns: 1fr; }
             .diary-margin  { display: none; }
-            .diary-body    { padding: 2rem 1.5rem; border-right: none; }
-            .diary-notes   { grid-template-columns: 1fr; }
+            .diary-body    { padding: 2rem 1.4rem 1.5rem; border-right: none; }
+            .diary-notes   { display: flex !important; flex-direction: column; padding: 0 1.4rem 2rem; }
+            .diary-note:nth-child(1),
+            .diary-note:nth-child(2),
+            .diary-note:nth-child(3),
+            .diary-note:nth-child(4) { transform: none; }
+            .diary-heading { font-size: 1.4rem; }
             .diary-heading::before { display: none; }
+            .diary-text { font-size: 1rem; line-height: 1.75; }
 
+            /* Controls */
             .key { width: 43px; height: 43px; font-size: 0.72rem; }
             .key.wide { width: 66px; }
-
             .controls-wrap { gap: 2rem; }
+
+            /* Sezioni titoli */
+            .section-title { font-size: clamp(1.5rem, 6vw, 2.2rem); }
+
+            /* Audio btn */
+            .audio-btn { bottom: 1rem; right: 1rem; width: 40px; height: 40px; }
         }
 
         /* ===================================================
@@ -1040,6 +1015,73 @@
         .steam-wishlist-btn svg { width: 18px; height: 18px; flex-shrink: 0; }
 
         /* ===================================================
+           PIOGGIA — canvas temporale
+        =================================================== */
+        #rain-canvas {
+            position: fixed; inset: 0;
+            pointer-events: none;
+            z-index: 500;
+            opacity: 0.55;
+        }
+
+        /* ===================================================
+           LAMPO — overlay flash
+        =================================================== */
+        #lightning-overlay {
+            position: fixed; inset: 0;
+            pointer-events: none;
+            z-index: 501;
+            background: rgba(200,220,255,0);
+            transition: background 0.04s;
+        }
+        #lightning-overlay.flash {
+            background: rgba(210,228,255,0.16);
+        }
+
+        /* ===================================================
+           AUDIO BUTTON — controllo musica horror
+        =================================================== */
+        .audio-btn {
+            position: fixed;
+            bottom: 1.6rem; right: 1.6rem;
+            z-index: 1002;
+            width: 44px; height: 44px;
+            background: rgba(5,5,7,0.88);
+            border: 1px solid var(--red);
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer;
+            color: var(--red-bright);
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 0 14px rgba(140,0,0,0.28);
+            padding: 0;
+        }
+
+        .audio-btn:hover {
+            border-color: var(--red-bright);
+            box-shadow: 0 0 26px rgba(200,0,0,0.55);
+            transform: scale(1.1);
+        }
+
+        .audio-btn svg { width: 18px; height: 18px; }
+
+        .audio-btn.playing {
+            border-color: var(--red-mid);
+            animation: audioPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes audioPulse {
+            0%, 100% { box-shadow: 0 0 14px rgba(140,0,0,0.28); }
+            50%       { box-shadow: 0 0 32px rgba(200,0,0,0.65), 0 0 65px rgba(140,0,0,0.25); }
+        }
+
+        .audio-btn .icon-muted   { display: flex; }
+        .audio-btn .icon-playing { display: none; }
+        .audio-btn.playing .icon-muted   { display: none; }
+        .audio-btn.playing .icon-playing { display: flex; }
+
+        /* ===================================================
            FLICKER — luce che lampeggia globalmente
         =================================================== */
         @keyframes flicker {
@@ -1066,6 +1108,39 @@
      CANVAS NEBBIA — particelle atmosferiche
 ========================================= -->
 <canvas id="fog-canvas"></canvas>
+
+<!-- =========================================
+     CANVAS PIOGGIA — temporale di sfondo
+========================================= -->
+<canvas id="rain-canvas"></canvas>
+
+<!-- =========================================
+     LAMPO — overlay flash fulmine
+========================================= -->
+<div id="lightning-overlay"></div>
+
+<!-- Audio musica horror (autoplay al primo gesto) -->
+<audio id="bg-audio" src="horrormusic.mp3" loop preload="none"></audio>
+
+<!-- Bottone audio fisso -->
+<button class="audio-btn" id="audio-btn" aria-label="Riproduci musica horror">
+    <!-- Icona: audio OFF (stato iniziale) -->
+    <span class="icon-muted" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+            <line x1="23" y1="9" x2="17" y2="15"/>
+            <line x1="17" y1="9" x2="23" y2="15"/>
+        </svg>
+    </span>
+    <!-- Icona: audio ON -->
+    <span class="icon-playing" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+            <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+            <path d="M19.07 4.93a10 10 0 0 1 0 14.14"/>
+        </svg>
+    </span>
+</button>
 
 <!-- =========================================
      NAVIGAZIONE FISSA
@@ -1111,10 +1186,6 @@
         class="hero-logo"
         loading="eager"
     >
-
-    <h1 class="hero-title flicker" data-text="HIDE AND SEEK">HIDE AND SEEK</h1>
-
-    <div class="hero-divider"></div>
 
     <!-- Tagline con effetto macchina da scrivere (JS) -->
     <p class="hero-tagline">
@@ -1706,19 +1777,98 @@
     animateFog();
 
     /* =====================================================
-       6. FLICKER GLOBALE — disturbo visivo casuale
+       6. RAIN — sistema pioggia temporale
     ===================================================== */
+    const rainCanvas = document.getElementById('rain-canvas');
+    const rctx       = rainCanvas.getContext('2d');
+    let RW, RH;
+
+    function resizeRain() {
+        RW = rainCanvas.width  = window.innerWidth;
+        RH = rainCanvas.height = window.innerHeight;
+    }
+    resizeRain();
+    window.addEventListener('resize', resizeRain, { passive: true });
+
+    const RAIN_COUNT = window.innerWidth < 600 ? 70 : 160;
+    const rainDrops  = [];
+
+    class RainDrop {
+        constructor(init) { this.reset(init); }
+        reset(init = false) {
+            this.x     = Math.random() * (RW + 120) - 60;
+            this.y     = init ? Math.random() * RH : -25;
+            this.len   = Math.random() * 18 + 7;
+            this.speed = Math.random() * 10 + 14;
+            this.alpha = Math.random() * 0.22 + 0.04;
+            this.w     = Math.random() * 0.7 + 0.2;
+        }
+        update() {
+            this.x += this.speed * 0.2;
+            this.y += this.speed;
+            if (this.y > RH + 30) this.reset();
+        }
+        draw() {
+            rctx.beginPath();
+            rctx.moveTo(this.x, this.y);
+            rctx.lineTo(this.x + this.len * 0.2, this.y - this.len);
+            rctx.strokeStyle = `rgba(170,200,225,${this.alpha})`;
+            rctx.lineWidth   = this.w;
+            rctx.stroke();
+        }
+    }
+
+    for (let i = 0; i < RAIN_COUNT; i++) rainDrops.push(new RainDrop(true));
+
+    function animateRain() {
+        rctx.clearRect(0, 0, RW, RH);
+        rainDrops.forEach(d => { d.update(); d.draw(); });
+        requestAnimationFrame(animateRain);
+    }
+    animateRain();
+
+    /* =====================================================
+       7. LIGHTNING — lampi occasionali del temporale
+    ===================================================== */
+    const lightningEl = document.getElementById('lightning-overlay');
+
+    function doLightning() {
+        lightningEl.classList.add('flash');
+        setTimeout(() => {
+            lightningEl.classList.remove('flash');
+            // Secondo lampo casuale (50% probabilità)
+            if (Math.random() > 0.5) {
+                setTimeout(() => {
+                    lightningEl.classList.add('flash');
+                    setTimeout(() => lightningEl.classList.remove('flash'), 55);
+                }, 100);
+            }
+        }, 75);
+    }
+
+    function scheduleLightning() {
+        const wait = 9000 + Math.random() * 24000;
+        setTimeout(() => { doLightning(); scheduleLightning(); }, wait);
+    }
+    scheduleLightning();
+
+    /* =====================================================
+       8. FLICKER — disturbo visivo luce artificiale
+    ===================================================== */
+    const flickerOverlay = document.createElement('div');
+    flickerOverlay.style.cssText = 'position:fixed;inset:0;pointer-events:none;z-index:9996;background:rgba(0,0,0,0);transition:background 0.04s;';
+    document.body.appendChild(flickerOverlay);
+
     function scheduleFlicker() {
         const wait = 9000 + Math.random() * 14000;
         setTimeout(() => {
-            // Sequenza rapida di lampeggi
-            document.body.style.filter = 'brightness(0.82)';
+            flickerOverlay.style.background = 'rgba(0,0,0,0.18)';
             setTimeout(() => {
-                document.body.style.filter = 'brightness(1)';
+                flickerOverlay.style.background = 'rgba(0,0,0,0)';
                 setTimeout(() => {
-                    document.body.style.filter = 'brightness(0.88)';
+                    flickerOverlay.style.background = 'rgba(0,0,0,0.12)';
                     setTimeout(() => {
-                        document.body.style.filter = '';
+                        flickerOverlay.style.background = 'rgba(0,0,0,0)';
                         scheduleFlicker();
                     }, 70);
                 }, 55);
@@ -1726,6 +1876,42 @@
         }, wait);
     }
     scheduleFlicker();
+
+    /* =====================================================
+       9. AUDIO — musica horror con toggle
+    ===================================================== */
+    const bgAudio  = document.getElementById('bg-audio');
+    const audioBtn = document.getElementById('audio-btn');
+    let   audioStarted = false;
+
+    bgAudio.volume = 0.42;
+
+    audioBtn.addEventListener('click', () => {
+        if (bgAudio.paused) {
+            bgAudio.play().then(() => {
+                audioBtn.classList.add('playing');
+                audioBtn.setAttribute('aria-label', 'Pausa musica horror');
+                audioStarted = true;
+            }).catch(() => {});
+        } else {
+            bgAudio.pause();
+            audioBtn.classList.remove('playing');
+            audioBtn.setAttribute('aria-label', 'Riproduci musica horror');
+        }
+    });
+
+    // Autoplay al primo gesto dell'utente (policy browser)
+    function tryAutoplay() {
+        if (!audioStarted && bgAudio.paused) {
+            bgAudio.play().then(() => {
+                audioBtn.classList.add('playing');
+                audioBtn.setAttribute('aria-label', 'Pausa musica horror');
+                audioStarted = true;
+            }).catch(() => {});
+        }
+    }
+    document.addEventListener('click',  tryAutoplay, { once: true });
+    document.addEventListener('scroll', tryAutoplay, { once: true, passive: true });
 </script>
 
 </body>
