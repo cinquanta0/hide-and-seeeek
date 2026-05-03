@@ -1187,7 +1187,16 @@
         .flicker { animation: flicker 6s infinite; }
 
         @media (max-width: 768px) {
-            .hero-video { opacity: 0.3; }
+            .hero-video {
+                width: 100vw;
+                height: 100vh;
+                min-width: unset;
+                min-height: unset;
+                top: 0; left: 0;
+                transform: none;
+                object-fit: cover;
+                opacity: 0.3;
+            }
         }
 
     </style>
